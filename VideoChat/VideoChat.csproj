@@ -22,6 +22,12 @@
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -276,6 +282,7 @@
     <Content Include="Content\icomoon\fonts\icomoon.woff" />
     <None Include="Properties\PublishProfiles\mg-webrtc - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\mg-webrtc - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\readiChat.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\adapter.js" />
     <Content Include="Scripts\alertify.min.js" />
