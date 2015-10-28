@@ -289,6 +289,7 @@
     <Content Include="Scripts\knockout-2.2.1.debug.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
     <Content Include="Scripts\knockout.mapping-latest.js" />
+    <Content Include="Scripts\RecordRTC.js" />
     <Content Include="Scripts\webrtcdemo\connectionManager.js" />
     <Content Include="Scripts\webrtcdemo\viewModel.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
