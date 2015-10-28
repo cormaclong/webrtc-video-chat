@@ -232,6 +232,30 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
             }
         };
 
+    // recording
+    var stopRecording = document.getElementById('stop-recording');
+    var recordRTC;
+
+    navigator.getUserMedia({ video: false, audio: true },
+        function(stream) {
+            var options = {
+                mimeType: 'audio/ogg',
+                bitsPerSecond: 128000
+            };
+            recordRTC = RecordRTC(stream, options);
+            recordRTC.startRecording();
+        },
+        function errorCallback(error) {
+            Console.log(JSON.stringify(error, null, '\t'));
+        });
+
+    stopRecording.onclick = function () {
+        recordRTC.stopRecording(function () {
+            var recordedBlob = recordRTC.getBlob();
+            saveAs(recordedBlob, "TestRecording.wav");
+        });
+    };
+
     return {
         start: _start, // Starts the UI process
         getStream: function() { // Temp hack for the connection manager to reach back in here for a stream
