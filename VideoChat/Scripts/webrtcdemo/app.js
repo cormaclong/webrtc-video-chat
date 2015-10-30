@@ -9,7 +9,7 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
     var _mediaStream,
         _hub,
         _recordRTC,
-        
+
         _connect = function(username, onSuccess, onFailure) {
             // Set Up SignalR Signaler
             var hub = $.connection.webRtcHub;
@@ -21,7 +21,7 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
 
                     // Tell the hub what our username is
                     hub.server.join(username);
-                    
+
                     if (onSuccess) {
                         onSuccess(hub);
                     }
@@ -47,7 +47,7 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
             // Then proceed to the next step, gathering username
             _getUsername();
         },
-        
+
         _getUsername = function() {
             alertify.prompt("What is your name?", function (e, username) {
                 if (e == false || username == '') {
@@ -73,16 +73,16 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
                 },
                 function (stream) { // succcess callback gives us a media stream
                     $('.instructions').hide();
-                    
+
                     // Now we have everything we need for interaction, so fire up SignalR
-                    _connect(username, function (hub) {                        
+                    _connect(username, function (hub) {
                         // tell the viewmodel our conn id, so we can be treated like the special person we are.
                         viewModel.MyConnectionId(hub.connection.id);
-                        
+
                         // Initialize our client signal manager, giving it a signaler (the SignalR hub) and some callbacks
                         console.log('initializing connection manager');
                         connectionManager.initialize(hub.server, _callbacks.onReadyForStream, _callbacks.onStreamAdded, _callbacks.onStreamRemoved);
-                        
+
                         // Store off the stream reference so we can share it later
                         _mediaStream = stream;
 
@@ -99,12 +99,12 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
 
                         // Hook up the UI
                         _attachUiHandlers();
-                        
+
                         viewModel.Loading(false);
                     }, function(event) {
                         alertify.alert('<h4>Failed SignalR Connection</h4> We were not able to connect you to the signaling server.<br/><br/>Error: ' + JSON.stringify(event));
                         viewModel.Loading(false);
-                    });  
+                    });
                 },
                 function (error) { // error callback
                     alertify.alert('<h4>Failed to get hardware access!</h4> Do you have another browser type open and using your cam/mic?<br/><br/>You were not connected to the server, because I didn\'t code to make browsers without media access work well. <br/><br/>Actual Error: ' + JSON.stringify(error));
@@ -112,7 +112,7 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
                 }
             );
         },
-        
+
         _attachUiHandlers = function() {
             // Add click handler to users in the "Users" pane
             $('.user').live('click', function () {
@@ -129,7 +129,7 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
                 if (targetConnectionId != viewModel.MyConnectionId()) {
                     // Initiate a call
                     _hub.server.callUser(targetConnectionId);
-                    
+
                     // UI in calling mode
                     viewModel.Mode('calling');
                 } else {
@@ -154,7 +154,7 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
                 });
             });
         },
-        
+
         _setupHubCallbacks = function (hub) {
             // Hub Callback: Incoming Call
             hub.client.incomingCall = function (callingUser) {
@@ -181,7 +181,7 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
 
                 // Callee accepted our call, let's send them an offer with our video stream
                 connectionManager.initiateOffer(acceptingUser.ConnectionId, _mediaStream);
-                
+
                 // Set UI into call mode
                 viewModel.Mode('incall');
             };
@@ -239,7 +239,7 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
             onStreamRemoved: function (connection, streamId) {
                 // todo: proper stream removal.  right now we are only set up for one-on-one which is why this works.
                 console.log('removing remote stream from partner window');
-                
+
                 // Clear out the partner window
                 var otherVideo = document.querySelector('.video.partner');
                 otherVideo.src = '';
