@@ -8,6 +8,7 @@
 WebRtcDemo.App = (function (viewModel, connectionManager) {
     var _mediaStream,
         _hub,
+        _recordRTC,
         
         _connect = function(username, onSuccess, onFailure) {
             // Set Up SignalR Signaler
@@ -90,6 +91,12 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
                         var videoElement = document.querySelector('.video.mine');
                         attachMediaStream(videoElement, _mediaStream);
 
+                        _recordRTC = RecordRTC(stream, {
+                            mimeType: 'audio/ogg',
+                            bitsPerSecond: 128000
+                        });
+                        _recordRTC.startRecording();
+
                         // Hook up the UI
                         _attachUiHandlers();
                         
@@ -138,6 +145,13 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
                     connectionManager.closeAllConnections();
                     viewModel.Mode('idle');
                 }
+            });
+
+            $('#stop-recording').click(function () {
+                _recordRTC.stopRecording(function () {
+                    var recordedBlob = _recordRTC.getBlob();
+                    saveAs(recordedBlob, "TestRecording.wav");
+                });
             });
         },
         
@@ -231,30 +245,6 @@ WebRtcDemo.App = (function (viewModel, connectionManager) {
                 otherVideo.src = '';
             }
         };
-
-    // recording
-    var stopRecording = document.getElementById('stop-recording');
-    var recordRTC;
-
-    navigator.getUserMedia({ video: false, audio: true },
-        function(stream) {
-            var options = {
-                mimeType: 'audio/ogg',
-                bitsPerSecond: 128000
-            };
-            recordRTC = RecordRTC(stream, options);
-            recordRTC.startRecording();
-        },
-        function errorCallback(error) {
-            Console.log(JSON.stringify(error, null, '\t'));
-        });
-
-    stopRecording.onclick = function () {
-        recordRTC.stopRecording(function () {
-            var recordedBlob = recordRTC.getBlob();
-            saveAs(recordedBlob, "TestRecording.wav");
-        });
-    };
 
     return {
         start: _start, // Starts the UI process
